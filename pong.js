@@ -11,6 +11,8 @@ let p2_y; //variáveis que controlam os movimentos de para cima e para baixo das
 let p1_points, p2_points // variáreis responsáveis pela computação dos pontos
 const p1_x = 10;//posição do eixo x do jogador 1
 const p2_x = w - p_w - 10; //posição do eixo x do jogador 2
+let p1_key; //Botão de movimento do jogador 1
+let p2_key; //Botão de movimento do jogador 2
 
 //Variável da bola
 let ball_y_orientation; //Direção que a bola está indo no eixo y
@@ -40,6 +42,52 @@ function setup() {
 
 //Função Loop responsável por calcular o eventos dentro do jogo(onde a bola irá, quem marcou ponto e o fim do jogo.)
 function loop () {
+    //Verifica a colisão com a raquete do jogador 1
+    if(ball_x >= p1_x && 
+        ball_x <= p1_x + 10 && 
+        ball_y >= p1_y && 
+        ball_y <= p1_y + p_h){
+            ball_x_orientation = 1
+    }
+    //Verifica a colisão com a raquete do jogador 2
+    else if(ball_x >= p2_x &&
+        ball_x <= p2_x + 10 &&
+        ball_y >= p2_y &&
+        ball_y <= p2_y + p_h){
+            ball_x_orientation = -1
+    }
+    //Verifica a colisão com o chão ou o teto
+    if (ball_y + 10 >= h || ball_y <= 0) ball_y_orientation *= -1
+
+    //Movimento da bola no eixo X e Y
+    ball_x += 5 * ball_x_orientation
+    ball_y += 5 * ball_y_orientation
+
+    //Contabilizando pontos
+    if(ball_x + 10 >w){
+        p1_points++;
+        initBall()
+    }else if (ball_x < 0){
+        p2_points++;
+        initBall()
+    }
+
+
+    //Adicionando o código responsável por mover as raquetes
+    //Raquete do jogador um
+    if(p1_key == 87 && p1_y > 0){
+        p1_y -= 10
+    }else if(p1_key == 83 && p1_y + p_h < h){
+        p1_y += 10
+    }
+    
+    //Raquete do jogador dois
+    if( p2_key == 38 && p2_y > 0){
+        p2_y -= 10
+    }else if (p2_key == 40 && p2_y + p_h < h){
+        p2_y +=10
+    }
+    
     draw() //Não esquecer de chamar o draw no loop para poder aparecer a tela
 }
 
@@ -71,10 +119,31 @@ function draw () {
     //Barra Lateral
     drawRect(w / 2 - 5, 0, 5, h);
     //Bola
-    drawRect(ball_x, ball_y, 10, 10)
-    
+    drawRect(ball_x, ball_y, 10, 10);
+
+    //Escrever os Pontos
+    writePoints()
     
 }
 
+function writePoints(){
+    ctx.font = "50px monospace";
+    ctx.fillStyle = "#fff";
+    //w/4 = 1/4 da tela, que é a tela do jogador 1
+    ctx.fillText(p1_points, w/4, 50);
+    //3*(w/4) = 3/4 da tela, que é a tela do jogador 2
+    ctx.fillText(p2_points, 3*(w/4),50)
+}
+
+document.addEventListener("keydown",function(ev){
+    //keyCode 87 = w, keyCode8 3 = s
+    if(ev.keyCode == 87 || ev.keyCode == 83){
+        p1_key = ev.keyCode
+    }
+    //keyCode 38 arrowUp, keyCode 40 = arrowDown
+    else if (ev.keyCode == 38 || ev.keyCode == 40){
+        p2_key = ev.keyCode
+    }
+}) 
 
 setup() //Chamada da função setup para iniciar o jogo
