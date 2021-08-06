@@ -3,7 +3,8 @@ let ctx ; //renderiza objetos no canvas
 const h = 500; //altura do canvas
 const w = 800; //largura do canvas
 const p_w = 20; //largura das raquetes, como são raquetes iguais apenas uma constante necessária
-const p_h = 200; //altura das raquetes, que são iguais, logo uma constante só
+const p_h = 150; //altura das raquetes, que são iguais, logo uma constante só
+var velo = 3 //velocidade base da bola
 
 //Variáveis dos Jogadores
 let p1_y;
@@ -42,26 +43,30 @@ function setup() {
 
 //Função Loop responsável por calcular o eventos dentro do jogo(onde a bola irá, quem marcou ponto e o fim do jogo.)
 function loop () {
+    
     //Verifica a colisão com a raquete do jogador 1
     if(ball_x >= p1_x && 
         ball_x <= p1_x + 10 && 
         ball_y >= p1_y && 
         ball_y <= p1_y + p_h){
-            ball_x_orientation = 1
+            ball_x_orientation = 1;
+            velo+=0.5;//A cada vez que a bola colidir com a raquete 1 a bola aumenta a velocidade me 0.5
     }
     //Verifica a colisão com a raquete do jogador 2
     else if(ball_x >= p2_x &&
         ball_x <= p2_x + 10 &&
         ball_y >= p2_y &&
         ball_y <= p2_y + p_h){
-            ball_x_orientation = -1
+            ball_x_orientation = -1;
+            velo +=0.5;//A cada vez que a bola colidir com a raquete 2 a bola aumenta a velocidade me 0.5            
     }
     //Verifica a colisão com o chão ou o teto
     if (ball_y + 10 >= h || ball_y <= 0) ball_y_orientation *= -1
 
     //Movimento da bola no eixo X e Y
-    ball_x += 5 * ball_x_orientation
-    ball_y += 5 * ball_y_orientation
+    ball_x += velo * ball_x_orientation
+    ball_y += velo * ball_y_orientation
+    console.log(velo)
 
     //Contabilizando pontos
     if(ball_x + 10 >w){
@@ -98,6 +103,7 @@ function initBall() {
     ball_x_orientation = Math.pow (2, Math.floor(Math.random() * 2) + 1) - 3
     ball_y = w / 2 - 10
     ball_x = h / 2 - 10
+    velo = 3 //Reseta o valor da bola a cada ponto feito
 
 }
 
