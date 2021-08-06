@@ -6,9 +6,10 @@ const p_w = 20; //largura das raquetes, como são raquetes iguais apenas uma con
 const p_h = 150; //altura das raquetes, que são iguais, logo uma constante só
 var velo = 3 //velocidade base da bola
 
+
 //Variáveis dos Jogadores
-let p1_y;
-let p2_y; //variáveis que controlam os movimentos de para cima e para baixo das "raquetes" de cada player 
+var p1_y;
+var p2_y; //variáveis que controlam os movimentos de para cima e para baixo das "raquetes" de cada player 
 let p1_points, p2_points // variáreis responsáveis pela computação dos pontos
 const p1_x = 10;//posição do eixo x do jogador 1
 const p2_x = w - p_w - 10; //posição do eixo x do jogador 2
@@ -28,15 +29,17 @@ function setup() {
     ctx = canvas.getContext("2d");
 
     //Inicializa a posição dos jogadores, que é no meio da tela
-    p1_y = p2_y = (h / 2) - (p_h / 2);
+    p1_y = (h / 2) - (p_h / 2);
+    p2_y = (h / 2) - (p_h / 2);
+    
 
     //Inicializa os pontos dos jogadores, que é zero
     p1_points = 0;
     p2_points = 0;
 
-    //Definindo o frame rate
-    setInterval(loop, 1000 / 60);
-    
+    // //Definindo o frame rate
+    setInterval(loop, 1000/60);
+
     initBall();
 }
 
@@ -76,25 +79,24 @@ function loop () {
         p2_points++;
         initBall()
     }
-
-
-    //Adicionando o código responsável por mover as raquetes
+    
+    //Adicionando o código responsável por dar limites das margens para as raquetes
     //Raquete do jogador um
-    if(p1_key == 87 && p1_y > 0){
-        p1_y -= 10
+    if(p1_key == 87 && p1_y > 0 ){
+        p1_y
     }else if(p1_key == 83 && p1_y + p_h < h){
-        p1_y += 10
+        p1_y
     }
     
     //Raquete do jogador dois
     if( p2_key == 38 && p2_y > 0){
-        p2_y -= 10
+        p2_y
     }else if (p2_key == 40 && p2_y + p_h < h){
-        p2_y +=10
+        p2_y
     }
-    
     draw() //Não esquecer de chamar o draw no loop para poder aparecer a tela
 }
+
 
 //Função responsável pela movimentação da bola
 function initBall() {
@@ -142,13 +144,26 @@ function writePoints(){
 }
 
 document.addEventListener("keydown",function(ev){
-    //keyCode 87 = w, keyCode8 3 = s
+    //keyCode 87 = w, keyCode 83 = s
     if(ev.keyCode == 87 || ev.keyCode == 83){
         p1_key = ev.keyCode
+        //Adicionando o código responsável por mover as raquetes
+        //OBS: colocando esse código aqui, impede que ele suba e desça automáticamente, permitindo pressionar o botão
+        if(p1_key == 87 && p1_y > 0 ){
+            p1_y -= 10
+        }else if(p1_key == 83 && p1_y + p_h < h){
+            p1_y += 10
+        }
     }
     //keyCode 38 arrowUp, keyCode 40 = arrowDown
     else if (ev.keyCode == 38 || ev.keyCode == 40){
-        p2_key = ev.keyCode
+        p2_key = ev.keyCode;
+        //Adicionando o código responsável por mover as raquetes
+        if( p2_key == 38 && p2_y > 0){
+            p2_y -= 10
+        }else if (p2_key == 40 && p2_y + p_h < h){
+            p2_y += 10
+        }
     }
 }) 
 
